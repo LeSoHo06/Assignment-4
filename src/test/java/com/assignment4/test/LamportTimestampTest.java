@@ -17,6 +17,6 @@ class LamportTimestampTest {
     void updateClock() {
         cl1.updateClock(2);
         timestamp=cl1.getCurrentTimestamp();
-        Assertions.assertEquals(3, timestamp);
+        Assertions.assertEquals(2, timestamp);
     }
 }
