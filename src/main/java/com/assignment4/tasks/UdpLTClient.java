@@ -35,8 +35,12 @@ public class UdpLTClient {
     String joinMessage = "message:timestamp:id";
 
     // TODO: Send an initial "join" message to notify the other clients that a new one has connected
+    joinMessage = "join:" + lc.getValue() + ":" + id;
+    sendData = joinMessage.getBytes();
 
     //TODO: Send the packet to the server
+    DatagramPacket joinPacket = new DatagramPacket(sendData, sendData.length, ipAddress, port);
+    clientSocket.send(joinPacket);
 
     // Prompt the user to enter messages
     System.out.println("[Client " + id + "] Enter any message:");
@@ -57,17 +61,19 @@ public class UdpLTClient {
         if (!messageBody.isEmpty()) {
 
           //TODO: Increment the Lamport clock for the message event
+          lc.tick();
 
           //TODO: Get the updated timestamp and prepare the message to send
-
-          String responseMessage = null;
+          int timestamp = lc.getValue();
+          String responseMessage = messageBody + ":" + timestamp + ":" + id;
+          sendData = responseMessage.getBytes();
 
           // TODO: Send the message to the server
-
-
+          DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, ipAddress, port);
+          clientSocket.send(sendPacket);
 
           // Print the sent message along with its timestamp
-          System.out.println("Sent message: " + messageBody + ":" + "with timestamp:");
+          System.out.println("Sent message: \"" + messageBody + "\" with timestamp: " + timestamp);
         }
       } catch (Exception e) {
         e.printStackTrace();
