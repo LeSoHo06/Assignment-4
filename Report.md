@@ -14,8 +14,16 @@ Blerta Cerkezi
 1. Why did message D have to be buffered and can we now always guarantee that all clients
    display the same message order?
 
+Message D has vector clock [2, 1, 1, 0], indicating client 1 had seen messages from clients 2 and 3 before sending D. If D arrives before message C (from client 3), the receiver's clock for client 3 is 0, while D shows client 1 had seen client 3's message (value 1). This violates causal ordering (senderClock[3] > receiverClock[3]), so D must be buffered until C arrives.
+
+Vector clocks guarantee causal ordering for causally related messages, but concurrent messages may still be delivered in different orders across clients. For total ordering, we would need an additional mechanism like a sequencer.
+
 2. Note that the chat application uses UDP. What could be an issue with this design choice—and
    how would you fix it?
+
+UDP issues: packet loss (no delivery guarantee), duplicate packets, and no flow control. This can cause missing or duplicate messages.
+
+Solutions: (1) Switch to TCP for reliable delivery, (2) implement a reliable UDP layer with ACKs and retransmissions, or (3) use a message broker that handles reliability and ordering.
    
 # Task 3
 
