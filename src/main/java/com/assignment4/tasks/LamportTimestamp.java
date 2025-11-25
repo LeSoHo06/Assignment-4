@@ -18,7 +18,7 @@ public class LamportTimestamp {
 
     public synchronized void updateClock(int receivedTimestamp){
         // TODO: update the function to choose the higher value out of the two received timestamps
-        timestamp = Math.max(timestamp, receivedTimestamp);
+        timestamp = Math.max(timestamp, receivedTimestamp) + 1;
     }
 
     // Needed by UdpLTClient
